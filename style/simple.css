@@ -1,0 +1,57 @@
+/* Copyright 2011 Juan I Carrano <juan@carrano.com.ar>*/
+body { color: #eeeeee; background-color: #0E0E0E; padding-left: 5%; padding-right: 5%;
+padding-top: 2.2em; padding-bottom: 2%; font-family:"Trebuchet MS", "Garamond", "Helvetica", sans-serif; }
+h1 { color: #FFCB4F; font-size: 500%; margin-bottom: -0.3ex; margin-top: 0ex;
+padding-top: 0ex; text-indent: -0.1ex; }
+h1 a:link, h1 a:visited { color: #FFCB4F; }
+h2 { color: #747474; font-style: oblique; }
+h3 { color: #747474; font-size: 300%; margin-top: 0pt; margin-bottom: 0pt; margin-left: 0pt; }
+h4{ color: #747474; font-size: 200%; margin-top: 0; font-style: oblique; }
+h2 a:link, a:visited, h3 a:link, h3 a:visited, h4 a:link, h4 a:visited { color: #747474; }
+h5 { text-align: center; font-size: 100%; color: #747474;}
+h6 { text-align: center; font-size: 130%; margin: 1ex; }
+th { border: 0.2em solid #8ABD68; border-top: 0em none gray; border-bottom: 0em none gray; border-left: 0em none gray; }
+th:last-child { border-right: 0em none gray; }
+td { border: 0.2em solid #8ABD68; border-top: 0em none gray; border-bottom:
+0em none gray; border-left: 0em none gray; padding-bottom: 0.2em; padding-top: 0.2em; }
+td:last-child { border-right: 0em none gray; }
+tr:nth-child(even) { background-color: #7AAD58; }
+tr:nth-child(odd) { background-color: #A4AD58; }
+.listing:first-child { }
+.bigentry { padding: 0.8em; }
+.bigentry:nth-child(even) { background-color: #7AAD58; }
+.bigentry:nth-child(odd) { background-color: #A4AD58; }
+.listing { color: #0D0D0D; /*width: 100%*/ width:auto; margin: 0em; border-collapse:collapse; }
+.bar { position: fixed; top: 0px; background-color: #AD587A; color: #a4a4a4;
+padding: 0.3em; font-size: 1.3em; left: 0px; width: 100%; }
+.search {
+	margin-top: -0.3em;
+	margin-bottom: -0.3em;
+	margin-right: 1ex;
+	padding: 0em;
+	float: right;
+}
+.parent_lnk {
+	float: left;
+	display: none;
+}
+a:link, a:visited {color: #4F82FF; text-decoration: none; }
+.bigwin a:link, a:visited {color: #195EFE; }
+#value_inp {width: 14ex;}
+pre {font-family:"Lucida Console", Monaco, monospace; padding: 1ex; padding-top: 0.1ex; border-left: .5ex solid #AD587A;}
+hr {background-color: #AD587A;}
+
+.bar_items {
+	float: left;
+	margin-left: 5%;
+	font-style: bold;
+	margin-top: 0em;
+	margin-bottom: 0em;
+	padding: 0em;
+}
+
+.bar_items hr {display: none;}
+.bar_items dl {display: inline;}
+.bar_items dt {display: inline-block; margin-right: 1ex;}
+.bar_items dt a { color: #a4a4a4;}
+.bar_items dd {display: none;}
