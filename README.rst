@@ -22,7 +22,7 @@ What is this?
 =============
 
 Basically some stuff I did back in 2011 just for fun, but never published.
-See an example of the output `here <man.html>`_
+See an example of the output `here <http://htmlpreview.github.io/?https://github.com/jcarrano/man.sh/blob/master/man.html>`_
 
 man.sh
 ------
