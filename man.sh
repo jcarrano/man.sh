@@ -1,5 +1,7 @@
 #!/bin/sh
 # Copyright 2011 Juan I Carrano <juan@carrano.com.ar>
+# Call without arguments to use as cgi script
+# To render a single page, use man.sh [section] page
 
 PINF=${PATH_INFO-"/"}
 
@@ -35,11 +37,12 @@ HDRB
 
 INDEXSTART=$(echo '<A NAME="index">&nbsp;</A><H2>Index</H2>' | sedify)
 INDEXEND='This document was created by'
+SELF_PROMOTION=$(echo "<a href=https://github.com/jcarrano/man.sh>man.sh</a>  using"|sedify)
 GARBAGE1=$(echo '<A HREF="#index">Index</A>' | sedify)
 GARBAGE2=$(echo '<A HREF="http://HH">Return to Main Contents</A>' | sedify)
 
 printman() {
-#	echo "${1}"
+	echo "${1}"
 	if MFILE="$(echo "${1}" | xargs man -w | grep -v '/var/cache')" ; then
 		bzcat "${MFILE}" | man2html -H H -M H | sed -r \
 's/^(<HTML>)/<!DOCTYPE HTML>\1/;'\
@@ -49,7 +52,7 @@ printman() {
 's/<TR[^<>]*><TD[^<>]*><HR><\/TD><\/TR>//;'\
 's/HREF\=\"file:\/usr\/include\/([^\/]+\/)?(.*)\"/HREF\=\".\/\2\"/g;'\
 's/<\/HEAD>/<link href="\/style\/simple.css" rel="stylesheet" type="text\/css" title="default" id="style" \/><\/HEAD>/;'\
-"s/$INDEXSTART/$HEADERBAR0/;s/($INDEXEND)/$HEADERBAR1\\1 man.sh, using/;"\
+"s/$INDEXSTART/$HEADERBAR0/;s/($INDEXEND)/$HEADERBAR1\\1 $SELF_PROMOTION/;"\
 "s/($GARBAGE1|$GARBAGE2)//"
 		return 1
 	else
@@ -63,10 +66,12 @@ main() {
 	fi
 }
 
-REQ="$(echo "${PINF}" | sed -n -r 's/^\/\?q=/\//g;y/~/ /;y/\// /;s/[ -]*([[:alnum:]_.+-]+([ ]+[[:alnum:]_.+]+[[:alnum:]_.+-]*)?)(.*)/\1/p' )"
+REQ="$(echo "${PINF}" | sed -n -r 's/^\/\?q=((.+)\+)?(.+)/\/\2~\3/;y/~/ /;y/\// /;s/[ -]*([[:alnum:]_.+-]+([ ]+[[:alnum:]_.+]+[[:alnum:]_.+-]*)?)(.*)/\1/p' )"
 
 if [ "x${REQ}" != "x" ] ; then
 	main "${REQ}" 2>&1
+elif [ -n "$1" ] ; then
+	main "$*" 2>&1 1>/dev/null | sed '1,/^$/d'
 else
 	cat <<HTDOC
 Status: 200 Ok
@@ -75,7 +80,3 @@ Content-type: text/plain
 Manual Page Browser by Juan Carrano
 HTDOC
 fi
-
-#echo  "${PATH_INFO}" "-" "${PINF}"  "-" "${REQ}"
-#sed 2>&1
-#echo "${PINF}" | sed -n -r 'y/~/ /;y/\// /;s/[ -]*([[:alnum:]_.+-]+([ ]+[[:alnum:]_.+]+[[:alnum:]_.+-]*)?)(.*)/\1/p' 2>&1

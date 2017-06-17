@@ -13,18 +13,17 @@ Content-type: $2
 HTDOC
 }
 
-w403() {
-    echo "403: ${1-Unknwn}" >&2
-    echo "Not Authorized" | respond "403 Unauthorized" "text/plain"
+qresp() {
+    echo "$1: ${3-Unknwn}" >&2
+    echo "$2" | respond "$2" "text/plain"
 }
 
-w404() {
-    echo "404: ${1-Unknwn}" >&2
-    echo "File not found" | respond "404 Not Found" "text/plain"
-}
+alias w403='qresp 403 "Not Authorized"'
+alias w404='qresp 403 "File not found"'
+alias w405='qresp 405 "Method Not Allowed"'
 
 serve_file() {
-    if ! SAFEPATH=$(realpath --relative-base=. -sm "$_BASEDIR/$1") ; then
+    if ! SAFEPATH=$(realpath --relative-base="$_BASEDIR" -m "$_BASEDIR/$1") ; then
         w404 "Empty path"
     fi
     case "$SAFEPATH" in
@@ -49,41 +48,36 @@ HTDOC
 }
 
 filter_cgi() {
-    read -r STATUS
-    THE_STATUS=$(echo "$STATUS" | sed -nr 's/^Status: (.+)/\1/p')
-    echo "HTTP/1.1" "$THE_STATUS"
-    cat
+    sed -r '1s/^Status: (.+)/HTTP\/1.1 \1/;'\
+'1t;'\
+'1iHTTP/1.1 200 Ok'
 }
 
-consume_headers() {
-    while true ; do
-        read -r SOMETHING
-        if [ -z "$(echo "$SOMETHING" | tr -d '\r')" ] ; then
-            break
-        fi
-    done
+parse_request() {
+    sed -n 's/\r//;1p;/^$/q'
 }
 
 serve_1() {
-    echo "Start parsing request" >&2
-    read -r LINE1
+    echo "Start parsing request:" >&2
+    parse_request | tee -a /dev/stderr | _serve_1
+}
 
-    echo "Consuming headers" >&2
-    consume_headers
+_serve_1() {
+    read -r METHOD PATHINFO HTTP_VERSION
 
-    echo "Headers consumed" >&2
-    case "$LINE1" in
-    GET*)
-        PATHINFO=$(echo "$LINE1" | sed -nr 's/^GET (\/[^ ]*).*/\1/p')
-        case "$PATHINFO" in
-        *.css)
-            serve_file "$PATHINFO" 'text/css'
-            ;;
-        *)
-            PATH_INFO="$PATHINFO" ./man.sh | filter_cgi
-        esac
+    echo "Starting response" >&2
+
+    if [ x"$METHOD" != xGET ] ; then
+        w405 "$METHOD"
+        return
+    fi
+
+    case "$PATHINFO" in
+    *.css)
+        serve_file "$PATHINFO" 'text/css'
         ;;
-    *)  w403
+    *)
+        PATH_INFO="$PATHINFO" ./man.sh | filter_cgi
         ;;
     esac
 
@@ -100,5 +94,5 @@ if [ x"$1" = xserve ] ; then
     echo "Exit NC" >&2
    done
 else
-   serve_1 2>>debug_log.txt | tee -a _OUTPUT_FILE
+   serve_1 2>>debug_log.txt | tee -a "$_OUTPUT_FILE"
 fi
