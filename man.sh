@@ -1,5 +1,6 @@
 #!/bin/sh
 # Copyright 2011 Juan I Carrano <juan@carrano.com.ar>
+# Distributed under the terms of the 3-Clause BSD License (see README.rst)
 # Call without arguments to use as cgi script
 # To render a single page, use man.sh [section] page
 
