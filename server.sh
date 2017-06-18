@@ -1,5 +1,6 @@
 #!/bin/sh
 # Copyright 2017 Juan I Carrano <juan@carrano.com.ar>
+# Distributed under the terms of the 3-Clause BSD License (see README.rst)
 
 PORT=${2-"8000"}
 _BASEDIR=${BASEDIR-$(pwd)}
